@@ -1,27 +1,34 @@
 import { useState } from "react"
-import { User } from './indexInteface'
+export interface User {
+  id: string,
+  name: string,
+  email: string,
+  title: string,
+  organization: string
+}
+interface SearchPanelProps {
+  users: User[],
+  param: {
+    name: string,
+    personId: string
+  },
+  setParam: (param: SearchPanelProps['param']) => void
+}
 
-export const SearchPanel = ({ param, setParam }) => {
-  const [users, setUsers] = useState<User[]>([{
-    name: '负责人',
-    id: ''
-  }, {
-    name: '222',
-    id: '2'
-  }])
+export const SearchPanel = ({ param, users, setParam }: SearchPanelProps) => {
 
   return <form>
     <input type="text" value={param.name} onChange={e => setParam({
       ...param,
       name: e.target.value
     })} />
-    <select value={param.id} onChange={e => setParam({
+    <select value={param.personId} onChange={e => setParam({
       ...param,
-      id: e.target.value
+      personId: e.target.value
     })}>
       {
         users.map(item => {
-          return <option value={item.id}>{item.name}</option>
+          return <option key={item.id} value={item.id}>{item.name}</option>
         })
       }
     </select>
