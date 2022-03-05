@@ -1,3 +1,4 @@
+import { Form, Input, Select } from "antd"
 import { useState } from "react"
 export interface User {
   id: string,
@@ -18,20 +19,20 @@ interface SearchPanelProps {
 
 export const SearchPanel = ({ param, users, setParam }: SearchPanelProps) => {
 
-  return <form>
-    <input type="text" value={param.name} onChange={e => setParam({
+  return <Form>
+    <Input type="text" value={param.name} onChange={e => setParam({
       ...param,
       name: e.target.value
     })} />
-    <select value={param.personId} onChange={e => setParam({
+    <Select value={param.personId} onChange={value => setParam({
       ...param,
-      personId: e.target.value
+      personId: value
     })}>
       {
         users.map(item => {
-          return <option key={item.id} value={item.id}>{item.name}</option>
+          return <Select.Option key={item.id} value={item.id}>{item.name}</Select.Option>
         })
       }
-    </select>
-  </form>
+    </Select>
+  </Form>
 }

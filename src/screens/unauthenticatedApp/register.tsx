@@ -1,27 +1,24 @@
 import { useAuth } from "context/auth-context"
-import { FormEvent } from "react"
+import { Form, Input, Button } from 'antd'
 
 
 export const RegisterScreen = () => {
   const { register, user } = useAuth()
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const username = (e.currentTarget.elements[0] as HTMLFormElement).value
-    const password = (e.currentTarget.elements[1] as HTMLFormElement).value
-    register({username, password})
+  const handleSubmit = (values: {username: string, password: string}) => {
+    register(values)
   }
-  return <form onSubmit={handleSubmit}>
+  return <Form onFinish={handleSubmit}>
     {
       user ? `登录成功！用户名：${user.name}` : ''
     }
-    <div>
-      <label htmlFor="username">用户名</label>
-      <input type="text" id="username" />
-    </div>
-    <div>
-      <label htmlFor="password">密码</label>
-      <input type="password" id="password" />
-    </div>
-    <button type="submit">注册</button>
-  </form>
+    <Form.Item name='username' rules={[{required: true, message: '请输入用户名'}]}>
+      <Input placeholder="用户名" type="text" id="username" />
+    </Form.Item>
+    <Form.Item name='password' rules={[{required: true, message: '请输入密码'}]}>
+      <Input  placeholder="密码" type="password" id="password" />
+    </Form.Item>
+    <Form.Item>
+      <Button htmlType="submit" type="primary">注册</Button>
+    </Form.Item>
+  </Form>
 }
