@@ -4,7 +4,7 @@ import { List, Project } from './list'
 import { useEffect, useState } from 'react'
 import { cleanObject, useDebounce, useMount } from '../../utils/index'
 import { useHttp } from 'utils/http'
-const apiUrl = process.env.REACT_APP_API_URL
+import styled from '@emotion/styled'
 interface QueryParam {
   name: string,
   personId: string
@@ -31,9 +31,13 @@ export const ProjectListScreen = () => {
     }).then(setUsers)
   })
   
-  return <div>
+  return <Container>
+    <h1>项目列表</h1>
     <SearchPanel users={users} param={param} setParam={setParam}></SearchPanel>
     <List users={users} list={list}></List>
     {/* <TestCmp></TestCmp> */}
-  </div>
+  </Container>
 }
+const Container = styled.div`
+  padding: 3.2rem;
+`
