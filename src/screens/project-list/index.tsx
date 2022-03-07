@@ -5,6 +5,9 @@ import { useEffect, useState } from 'react'
 import { cleanObject, useDebounce, useMount } from '../../utils/index'
 import { useHttp } from 'utils/http'
 import styled from '@emotion/styled'
+import { useProjects } from 'utils/project'
+import { useUsers } from 'utils/user'
+import { Typography } from 'antd'
 interface QueryParam {
   name: string,
   personId: string
@@ -15,26 +18,15 @@ export const ProjectListScreen = () => {
     name: '',
     personId: ''
   })
-  const [users, setUsers] = useState<User[]>([])
-  const [list, setList] = useState<Project[]>([])
   const debouncedParam = useDebounce(param, 200)
-  const client = useHttp()
-
-  useEffect(() => {
-    client('projects', {
-      data: cleanObject(debouncedParam)
-    }).then(setList)
-  }, [debouncedParam])
-  useMount(() => {
-    client('users', {
-      data: cleanObject(debouncedParam)
-    }).then(setUsers)
-  })
+  const { isLoading, error, data: list } = useProjects(debouncedParam)
+  const { data: users } = useUsers()
   
   return <Container>
     <h1>项目列表</h1>
-    <SearchPanel users={users} param={param} setParam={setParam}></SearchPanel>
-    <List users={users} list={list}></List>
+    <SearchPanel users={users || []} param={param} setParam={setParam}></SearchPanel>
+    { error ? <Typography.Text type='danger'>{error.message}</Typography.Text> : null}
+    <List loading={isLoading} users={users || []} dataSource={list || []}></List>
     {/* <TestCmp></TestCmp> */}
   </Container>
 }
