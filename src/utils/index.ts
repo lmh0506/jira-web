@@ -54,3 +54,5 @@ export const useArray = <T>(value: T[]) => {
     add
   }
 }
+
+export const resetRoute = () => window.location.href = window.location.origin

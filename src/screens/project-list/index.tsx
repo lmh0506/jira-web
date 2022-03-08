@@ -1,23 +1,20 @@
-import { SearchPanel, User } from './search-panel'
+import { SearchPanel } from './search-panel'
 // import { TestCmp } from './test'
-import { List, Project } from './list'
-import { useEffect, useState } from 'react'
-import { cleanObject, useDebounce, useMount } from '../../utils/index'
-import { useHttp } from 'utils/http'
+import { List } from './list'
+import { useState } from 'react'
+import { useDebounce } from '../../utils/index'
 import styled from '@emotion/styled'
 import { useProjects } from 'utils/project'
 import { useUsers } from 'utils/user'
 import { Typography } from 'antd'
+import { useUrlQueryParam } from 'utils/url'
 interface QueryParam {
   name: string,
   personId: string
 }
 
 export const ProjectListScreen = () => {
-  const [param, setParam] = useState<QueryParam>({
-    name: '',
-    personId: ''
-  })
+  const [param, setParam] = useUrlQueryParam(['name', 'personId'])
   const debouncedParam = useDebounce(param, 200)
   const { isLoading, error, data: list } = useProjects(debouncedParam)
   const { data: users } = useUsers()
@@ -30,6 +27,9 @@ export const ProjectListScreen = () => {
     {/* <TestCmp></TestCmp> */}
   </Container>
 }
+
+// ProjectListScreen.whyDidYouRender = true
+
 const Container = styled.div`
   padding: 3.2rem;
 `
