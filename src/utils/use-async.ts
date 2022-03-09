@@ -26,11 +26,17 @@ export const useAsync = <T>(initialState?: State<T>) => {
     stat: 'error',
     data: null
   })
+  const [retry, setRestry] = useState(() => () => {})
   // 用来触发异步请求
-  const run = (promise: Promise<T>) => {
+  const run = (promise: Promise<T>, runConfig?: {retry: () => Promise<T>}) => {
     if(!promise || !promise.then) {
       throw new Error('请传入 Promise 类型数据')
     }
+    setRestry(() => () => {
+      if(runConfig?.retry) {
+        run(runConfig?.retry())
+      }
+    })
     setState({
       ...state,
       stat: 'loading'
@@ -52,6 +58,8 @@ export const useAsync = <T>(initialState?: State<T>) => {
     run,
     setData,
     setError,
+    retry,
+    setRestry,
     ...state
   }
 }
