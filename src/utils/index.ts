@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 export const isFalsy = (val: unknown) => val === 0 ? false : !val
 export const isVoid = (val: unknown) => val === undefined || val === null || val === ''
 
@@ -56,3 +56,14 @@ export const useArray = <T>(value: T[]) => {
 }
 
 export const resetRoute = () => window.location.href = window.location.origin
+
+export const useMountedRef = () => {
+  const mountRef = useRef(false)
+  useEffect(() => {
+    mountRef.current = true
+    return () => {
+      mountRef.current = false
+    }
+  })
+  return mountRef
+}

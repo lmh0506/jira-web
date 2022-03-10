@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { Button } from "antd";
 
 export const Row = styled.div<{
   gap?: number | boolean,
@@ -14,4 +15,8 @@ export const Row = styled.div<{
     margin-bottom: 0 !important;
     margin-right: ${props => typeof props.gap === 'number' ? props.gap + 'rem' : props.gap ? '2rem' : undefined};
   }
+`
+
+export const ButtonNoPadding = styled(Button)`
+  padding: 0;
 `

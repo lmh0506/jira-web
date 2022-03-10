@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Row } from 'components/lib'
+import { ButtonNoPadding, Row } from 'components/lib'
 import { useAuth } from 'context/auth-context'
 import { ProjectListScreen } from 'screens/project-list'
 import { ReactComponent as SoftwareLogo} from 'assets/software-logo.svg'
@@ -8,7 +8,11 @@ import { Route, Navigate, Routes } from 'react-router'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { ProjectScreen } from 'screens/project'
 import { resetRoute } from 'utils'
+import { ProjectModal } from 'screens/project-list/project-modal'
+import { useState } from 'react'
+import { ProjectPopover } from 'components/project-popover'
 export const AuthenticatedApp = () => {
+  const [projectModalOpen, setProjectModalOpen] = useState(false)
   return <Container>
     <PageHeader></PageHeader>
     <Main>
@@ -20,6 +24,7 @@ export const AuthenticatedApp = () => {
         </Routes>
       </Router>
     </Main>
+    <ProjectModal projectModalOpen={projectModalOpen} onClose={() => setProjectModalOpen(false)}></ProjectModal>
   </Container>
 }
 
@@ -27,11 +32,11 @@ const PageHeader = () => {
   const { logout, user } = useAuth()
   return <Header between>
     <HeaderLeft gap>
-      <Button type='link' onClick={resetRoute}>
-        <SoftwareLogo width="18rem" color="rgb(38, 132, 255)"></SoftwareLogo>
-      </Button>
-      <h2>项目</h2>
-      <h2>用户</h2>
+      <ButtonNoPadding type='link' onClick={resetRoute}>
+        <SoftwareLogo width="11rem" color="rgb(38, 132, 255)"></SoftwareLogo>
+      </ButtonNoPadding>
+      <ProjectPopover></ProjectPopover>
+      <span>用户</span>
     </HeaderLeft>
     <HeaderRight>
       <Dropdown overlay={
