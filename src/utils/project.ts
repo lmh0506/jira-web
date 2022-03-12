@@ -1,37 +1,46 @@
-import { useEffect, useCallback } from 'react';
-import { cleanObject } from 'utils';
+import { QueryKey } from 'react-query';
+import { useEditConfig, useAddConfig, useDeleteConfig } from './use-optimistic-options';
 import { Project } from './../screens/project-list/list';
 import { useHttp } from './http';
-import { useAsync } from './use-async';
+import { useQuery, useMutation } from 'react-query'
 export const useProjects = (param?: Partial<Project>) => {
   const client = useHttp()
-  const { run, ...result } = useAsync<Project[]>()
-  const fetchProject = useCallback(() => client('projects', {
-    data: cleanObject(param || {})
-  }), [param, client])
 
-  useEffect(() => {
-    run(fetchProject(), {
-      retry: fetchProject
-    })
-  }, [param, run, fetchProject])
-
-  return result
+  return useQuery<Project[], Error>(['project', param], () => client('projects', {data: param}))
 }
 
-export const useEditProjects = () => {
+export const useEditProjects = (queryKey: QueryKey) => {
   const client = useHttp()
-  const { run, ...result } = useAsync<Project[]>()
+  return useMutation((params: Partial<Project>) => client(`projects/${params.id}`, {
+    data: params,
+    method: 'PATCH'
+  }),
+  useEditConfig(queryKey))
+}
 
-  const mutate = (params: Partial<Project>) => {
-    return run(client(`projects/${params.id}`, {
-      data: params,
-      method: 'PATCH'
-    }))
-  }
+export const useAddProjects = (queryKey: QueryKey) => {
+  const client = useHttp()
+  return useMutation((params: Partial<Project>) => client(`projects`, {
+    data: params,
+    method: 'POST'
+  }), 
+  useAddConfig(queryKey))
+}
 
-  return {
-    mutate,
-    ...result
-  }
+export const useDeleteProjects = (queryKey: QueryKey) => {
+  const client = useHttp()
+  return useMutation(({id}: {id: number}) => client(`projects/${id}`, {
+    method: 'DELETE'
+  }), 
+  useDeleteConfig(queryKey))
+}
+
+export const useProject = (id?: number) => {
+  const client = useHttp()
+  return useQuery<Project>(
+    ['project', {id}],
+    () => client(`projects/${id}`), {
+      enabled: Boolean(id)
+    }
+  )
 }

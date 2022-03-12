@@ -6,6 +6,7 @@ import { useMount } from "utils";
 import { useAsync } from "utils/use-async";
 import { Spin, Typography } from "antd";
 import styled from "@emotion/styled";
+import { ErrorBox } from "components/lib";
 
 const AuthContext = createContext<{
   user: User | null,
@@ -69,5 +70,5 @@ export const FullPageLoading = () => <FullPage>
 </FullPage>
 
 export const FullPageErrorFallback= ({error}: {error: Error | null}) => <FullPage>
-  <Typography.Text type='danger'>{error?.message}</Typography.Text>
+  <ErrorBox error={error}></ErrorBox>
 </FullPage>

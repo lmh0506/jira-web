@@ -5,23 +5,24 @@ import { useDebounce } from '../../utils/index'
 import styled from '@emotion/styled'
 import { useProjects } from 'utils/project'
 import { useUsers } from 'utils/user'
-import { Button, Typography } from 'antd'
-import { useProjectsSearchParams } from './utils'
-import { Row } from 'components/lib'
+import { Button } from 'antd'
+import { useProjectModal, useProjectsSearchParams } from './utils'
+import { ErrorBox, Row } from 'components/lib'
 
 export const ProjectListScreen = () => {
+  const {open} = useProjectModal()
   const [param, setParam] = useProjectsSearchParams()
-  const { isLoading, error, data: list, retry } = useProjects(useDebounce(param, 200))
+  const { isLoading, error, data: list } = useProjects(useDebounce(param, 200))
   const { data: users } = useUsers()
   
   return <Container>
     <Row between>  
       <h1>项目列表</h1>
-      <Button >创建项目</Button>
+      <Button onClick={open}>创建项目</Button>
     </Row>
     <SearchPanel users={users || []} param={param} setParam={setParam}></SearchPanel>
-    { error ? <Typography.Text type='danger'>{error.message}</Typography.Text> : null}
-    <List refresh={retry} loading={isLoading} users={users || []} dataSource={list || []}></List>
+    <ErrorBox error={error}></ErrorBox>
+    <List loading={isLoading} users={users || []} dataSource={list || []}></List>
     {/* <TestCmp></TestCmp> */}
   </Container>
 }

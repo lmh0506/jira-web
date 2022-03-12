@@ -9,23 +9,25 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import { ProjectScreen } from 'screens/project'
 import { resetRoute } from 'utils'
 import { ProjectModal } from 'screens/project-list/project-modal'
-import { useState } from 'react'
 import { ProjectPopover } from 'components/project-popover'
+import {  QueryClient, QueryClientProvider } from 'react-query';
 export const AuthenticatedApp = () => {
-  const [projectModalOpen, setProjectModalOpen] = useState(false)
-  return <Container>
-    <PageHeader></PageHeader>
-    <Main>
+  const queryClient = new QueryClient();
+  return <QueryClientProvider client={ queryClient }>
+    <Container>
       <Router>
-        <Routes>
-          <Route path='/projects' element={<ProjectListScreen />}></Route>
-          <Route path='/projects/:projectId/*' element={<ProjectScreen />}></Route>
+        <PageHeader></PageHeader>
+        <Main>
+          <Routes>
+            <Route path='/projects' element={<ProjectListScreen />}></Route>
+            <Route path='/projects/:projectId/*' element={<ProjectScreen />}></Route>
+          </Routes>
           {/* <Navigate to={'/projects'}></Navigate> */}
-        </Routes>
+          <ProjectModal></ProjectModal>
+        </Main>
       </Router>
-    </Main>
-    <ProjectModal projectModalOpen={projectModalOpen} onClose={() => setProjectModalOpen(false)}></ProjectModal>
-  </Container>
+    </Container>
+  </QueryClientProvider>
 }
 
 const PageHeader = () => {
