@@ -6,13 +6,17 @@ import reportWebVitals from './reportWebVitals';
 import { loadDevTools } from 'jira-dev-tool'
 import 'antd/dist/antd.less'
 import { AppProviders } from './context/index'
+import {  QueryClient, QueryClientProvider } from 'react-query';
 
 loadDevTools(() => {
+  const queryClient = new QueryClient();
   ReactDOM.render(
     <React.StrictMode>
-      <AppProviders>
-        <App />
-      </AppProviders>
+      <QueryClientProvider client={ queryClient }>
+        <AppProviders>
+          <App />
+        </AppProviders>
+      </QueryClientProvider>
     </React.StrictMode>,
     document.getElementById('root')
   );

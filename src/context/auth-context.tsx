@@ -7,6 +7,7 @@ import { useAsync } from "utils/use-async";
 import { Spin, Typography } from "antd";
 import styled from "@emotion/styled";
 import { ErrorBox } from "components/lib";
+import { useQueryClient } from "react-query";
 
 const AuthContext = createContext<{
   user: User | null,
@@ -33,9 +34,14 @@ const bootstrapUser = async () => {
 
 export const AuthProvider = ({children}: {children: ReactNode}) => {
   const { run, isError, error, isIdle, isLoading, data: user, setData: setUser } = useAsync<User | null>()
+  const queryClient = useQueryClient()
+
   const login = (form: AuthForm) => auth.login(form).then(setUser)
   const register = (form: AuthForm) => auth.register(form).then(setUser)
-  const logout = () => auth.logout().then(() => setUser(null))
+  const logout = () => auth.logout().then(() => {
+    setUser(null)
+    queryClient.clear()
+  })
 
   useMount(() => {
     run(bootstrapUser())

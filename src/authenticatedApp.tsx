@@ -10,24 +10,20 @@ import { ProjectScreen } from 'screens/project'
 import { resetRoute } from 'utils'
 import { ProjectModal } from 'screens/project-list/project-modal'
 import { ProjectPopover } from 'components/project-popover'
-import {  QueryClient, QueryClientProvider } from 'react-query';
 export const AuthenticatedApp = () => {
-  const queryClient = new QueryClient();
-  return <QueryClientProvider client={ queryClient }>
-    <Container>
-      <Router>
-        <PageHeader></PageHeader>
-        <Main>
-          <Routes>
-            <Route path='/projects' element={<ProjectListScreen />}></Route>
-            <Route path='/projects/:projectId/*' element={<ProjectScreen />}></Route>
-          </Routes>
-          {/* <Navigate to={'/projects'}></Navigate> */}
-          <ProjectModal></ProjectModal>
-        </Main>
-      </Router>
-    </Container>
-  </QueryClientProvider>
+  return <Container>
+    <Router>
+      <PageHeader></PageHeader>
+      <Main>
+        <Routes>
+          <Route path='/projects' element={<ProjectListScreen />}></Route>
+          <Route path='/projects/:projectId/*' element={<ProjectScreen />}></Route>
+        </Routes>
+        {/* <Navigate to={'/projects'}></Navigate> */}
+        <ProjectModal></ProjectModal>
+      </Main>
+    </Router>
+  </Container>
 }
 
 const PageHeader = () => {
